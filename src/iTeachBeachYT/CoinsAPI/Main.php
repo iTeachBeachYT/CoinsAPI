@@ -10,8 +10,12 @@ use pocketmine\utils\Config;
 class Main extends PluginBase
 {
 
+    public static $instance;
+
     public function onEnable()
     {
+        self::$instance = $this;
+
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
     }
 
@@ -33,6 +37,7 @@ class Main extends PluginBase
     public function addCoins(Player $player, int $amount)
     {
         $config = new Config($this->getDataFolder() . "players.yml", Config::YAML);
+
         $config->set(strtolower($player->getName()), $this->getCoins($player) + $amount);
         $config->save();
     }
@@ -44,6 +49,7 @@ class Main extends PluginBase
     public function removeCoins(Player $player, int $amount)
     {
         $config = new Config($this->getDataFolder() . "players.yml", Config::YAML);
+
         $config->set(strtolower($player->getName()), $this->getCoins($player) + $amount);
         $config->save();
     }
@@ -55,8 +61,14 @@ class Main extends PluginBase
     public function setCoins(Player $player, int $amount)
     {
         $config = new Config($this->getDataFolder() . "players.yml", Config::YAML);
+
         $config->set(strtolower($player->getName()), $amount);
         $config->save();
+    }
+
+    public static function getInstance(): self
+    {
+        return self::$instance;
     }
 
 }
